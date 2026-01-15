@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "InputAssets",
+    "maps": [
+        {
+            "name": "DebugInput",
+            "id": "baf36d9f-7e51-491b-a61e-8d2f6ab3ecf6",
+            "actions": [
+                {
+                    "name": "AddCharacterDebug",
+                    "type": "Button",
+                    "id": "4fc46a55-8690-4d6e-b4a3-88a70043be6b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "de93c7da-f7cc-49bb-838e-c360b4971264",
+                    "path": "<Keyboard>/f5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AddCharacterDebug",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
