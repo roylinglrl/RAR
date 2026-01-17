@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]//可序列化类
-public class CharacterData
+public class Character
 {
     public String CharacterID { get; set; }//角色ID, 唯一标识符 从CharacterSO中获取静态数据
     public String CharacterName { get; set; }//角色名称 从CharacterSO中获取静态数据
@@ -10,7 +10,7 @@ public class CharacterData
     [NonSerialized]
     public CharacterSO CharacterSO;//角色的ScriptableObject数据
 
-    public CharacterData(String characterID)//角色数据构造函数
+    public Character(String characterID)//角色构造函数
     {
         CharacterID = characterID;
         Initialize();

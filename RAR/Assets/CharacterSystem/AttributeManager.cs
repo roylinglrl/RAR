@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 
 public class AttributeManager //属性管理器
@@ -21,14 +22,10 @@ public class AttributeManager //属性管理器
         _cachedFinalAttributes = new Dictionary<AttributeType, float>();
     }
 
-    public void initializeDefaultAttributes()//初始化默认属性
+    public void initializeDefaultAttributes(Character character)//初始化默认属性
     {
         //TODO: 从CharacterSO中获取默认属性值
-        BaseAttributes[AttributeType.MaxHealth] = 10f;
-        BaseAttributes[AttributeType.MaxDefense] = 10f;
-        BaseAttributes[AttributeType.Armor] = 10f;
-        BaseAttributes[AttributeType.MaxEnergy] = 10f;
-        BaseAttributes[AttributeType.SpeedMovement] = 10f;
+        CharacterSO characterSO = character.CharacterSO;
 
         MarkDirty();
     }
@@ -137,15 +134,6 @@ public class AttributeManager //属性管理器
 }
 
 
-public enum AttributeType
-{
-    //属性类型
-    MaxHealth,//最大生命值
-    MaxDefense,//最大防御力
-    Armor,//护甲值
-    MaxEnergy,//最大能量值
-    SpeedMovement,//移动速度
-}
 public enum ModifierType
 {
     Additive,//加法修改器
