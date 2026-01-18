@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 
 public class AttributeManager //属性管理器
@@ -22,11 +21,29 @@ public class AttributeManager //属性管理器
         _cachedFinalAttributes = new Dictionary<AttributeType, float>();
     }
 
-    public void initializeDefaultAttributes(Character character)//初始化默认属性
+    public void initializeDefaultAttributes()//初始化默认属性
     {
         //TODO: 从CharacterSO中获取默认属性值
-        CharacterSO characterSO = character.CharacterSO;
-
+        CharacterSO characterSO = CharacterManager.Instance.currentCharacterData.GetCharacterSO();
+        if (characterSO == null)
+        {
+            Debug.LogError("CharacterSO not found for ID: " + CharacterManager.Instance.currentCharacterData.CharacterID);
+            return;
+        }
+        BaseAttributes.Clear();
+        BaseAttributes[AttributeType.MaxHealth] = characterSO.MaxHealth;//最大生命值
+        BaseAttributes[AttributeType.MaxShield] = characterSO.MaxShield;//最大护盾值
+        BaseAttributes[AttributeType.ShieldDamageReductionRatio] = characterSO.ShieldDamageReductionRatio;//护盾值伤害减免比率 不会超过1
+        BaseAttributes[AttributeType.Armor] = characterSO.Armor;//护甲值
+        BaseAttributes[AttributeType.MaxEnergy] = characterSO.MaxEnergy;//最大能量值
+        BaseAttributes[AttributeType.SpeedMovement] = characterSO.SpeedMovement;//移动速度
+        BaseAttributes[AttributeType.MaxStamina] = characterSO.MaxStamina;//最大耐力值
+        BaseAttributes[AttributeType.WeightCapacity] = characterSO.WeightCapacity;//负重能力
+        BaseAttributes[AttributeType.BackPackCapacity] = characterSO.BackPackCapacity;//背包容量(初始)
+        BaseAttributes[AttributeType.WeightReductionRatio] = characterSO.WeightReductionRatio;//负重减免比率 不会超过1
+        BaseAttributes[AttributeType.SafeBackPackCapacity] = characterSO.SafeBackPackCapacity;//安全背包容量(初始)
+        BaseAttributes[AttributeType.CoolDownReductionRatio] = characterSO.CoolDownReductionRatio;//冷却缩减比率 不会超过1
+        //TODO : 初始化其他属性
         MarkDirty();
     }
     private void MarkDirty()//标记属性为脏，需要重新计算
@@ -132,8 +149,6 @@ public class AttributeManager //属性管理器
         MarkDirty();
     }
 }
-
-
 public enum ModifierType
 {
     Additive,//加法修改器

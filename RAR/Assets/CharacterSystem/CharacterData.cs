@@ -2,20 +2,34 @@ using System;
 using UnityEngine;
 
 [Serializable]//可序列化类
-public class Character
+public class CharacterData
 {
     public String CharacterID { get; set; }//角色ID, 唯一标识符 从CharacterSO中获取静态数据
     public String CharacterName { get; set; }//角色名称 从CharacterSO中获取静态数据
+    public int CurrentLevel { get; set; } = 1;//当前等级
+    public float CurrentExperience { get; set; } = 0f;//当前经验值
+    public bool isHurt = false;//是否受伤
+    public Item[] equipmentSlots = new Item[4] { null, null, null, null };//装备槽位
     
     [NonSerialized]
-    public CharacterSO CharacterSO;//角色的ScriptableObject数据
-
-    public Character(String characterID)//角色构造函数
+    private CharacterSO CharacterSO;//角色的ScriptableObject数据
+    public CharacterSO GetCharacterSO()//获取CharacterSO
+    {
+        if (CharacterSO == null)
+        {
+            CharacterSO = Resources.Load<CharacterSO>("CharacterSO/" + CharacterID);
+            if (CharacterSO == null)
+            {
+                Debug.LogError("CharacterSO not found for ID: " + CharacterID);
+            }
+        }
+        return CharacterSO;
+    }
+    public CharacterData(String characterID)//角色数据构造函数
     {
         CharacterID = characterID;
         Initialize();
     }
-
     public void Initialize()//从CharacterSO初始化角色数据
     {
         GetCharacterSO(CharacterID);
