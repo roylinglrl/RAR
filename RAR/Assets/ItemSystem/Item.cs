@@ -10,7 +10,6 @@ public class Item//物品类
 
     [NonSerialized]
     public ItemSO itemSO;//物品数据脚本
-
     public Item(string itemID)//物品类构造函数(物品ID)
     {
         this.itemID = itemID;

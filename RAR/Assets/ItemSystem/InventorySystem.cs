@@ -5,88 +5,101 @@ using UnityEngine;
 [Serializable]
 public class InventorySystem
 {
-    [SerializeField] private List<Item> inventoryItems = new List<Item>();
+    public int BackpackCount { get; private set; }//背包容量
+    [SerializeField] private List<Item> inventoryItems = new List<Item>();// 库存物品列表
     public event Action<Item> OnItemAdded;
     public event Action<Item> OnItemRemoved;
     public event Action<Item> OnItemQuantityChanged;
-    
-    /// <summary>
-    /// 添加物品到库存
-    /// </summary>
-    /// <param name="item">要添加的物品</param>
-    /// <returns>是否成功添加物品</returns>
-    public bool AddItem(Item item)
+
+    public void init()//初始化库存系统
     {
-        if (item.itemSO.itemStack > 1)
+        refreshBackpackCount();
+    }
+    public bool canChangeBackpackCount(int newBackpackCount)
+    {
+        return newBackpackCount >= BackpackCount;
+    }//判断是否可以改变背包容量
+    public void refreshBackpackCount()
+    {
+        if(CharacterManager.Instance.currentCharacterData == null)//如果当前角色数据为空
         {
-            Item existingItem = inventoryItems.Find(x => x.itemID == item.itemID);
-            if (existingItem != null)
+            return;
+        }
+        CharacterManager.Instance.attributeManager._isDirty = true;//标记属性系统为脏
+        int BackpackCount = (int)CharacterManager.Instance.attributeManager.GetFinalAttributeValue(AttributeType.BackPackCapacity);
+        if(BackpackCount >= 0 && BackpackCount != this.BackpackCount)
+        {
+            this.BackpackCount = BackpackCount;
+        }
+        List<Item> oldItems = new List<Item>();
+        foreach (Item item in inventoryItems)
+        {
+            if(item != null)
             {
-                existingItem.itemCount += item.itemCount;
-                OnItemQuantityChanged?.Invoke(existingItem);
-                return true;
+                oldItems.Add(item);
             }
         }
-        
-        inventoryItems.Add(item);
-        OnItemAdded?.Invoke(item);
-        return true;
+        inventoryItems.Clear();
+        inventoryItems.AddRange(oldItems);
     }
-    
-    /// <summary>
-    /// 从库存中移除物品
-    /// </summary>
-    /// <param name="item">要移除的物品</param>
-    /// <returns>是否成功移除物品</returns>
-    public bool RemoveItem(Item item)
+
+    public bool AddItem(Item item)//添加物品到库存的第一个null位置
     {
-        if (inventoryItems.Remove(item))
+        //寻找第一个null的位置
+        int firstNullIndex = inventoryItems.IndexOf(null);
+        if (firstNullIndex != -1)
         {
+            inventoryItems[firstNullIndex] = item;
+            OnItemAdded?.Invoke(item);
+            return true;
+        }
+        return false;
+    }
+    public bool RemoveItem(Item item)//从库存中移除物品
+    {
+        int index = inventoryItems.IndexOf(item);
+        if (index != -1)
+        {
+            inventoryItems[index] = null;
             OnItemRemoved?.Invoke(item);
             return true;
         }
         return false;
     }
-    
-    /// <summary>
-    /// 从库存中移除物品(指定数量)
-    /// </summary>
-    /// <param name="itemID">要移除的物品ID</param>
-    /// <param name="quantity">要移除的物品数量</param>
-    /// <returns>是否成功移除物品</returns>
-    public bool RemoveItem(string itemID, int quantity = 1)
+    public void RemoveItemWithPosition(int position)//从库存中移除物品(指定位置)
     {
-        Item existingItem = inventoryItems.Find(x => x.itemID == itemID);
-        if (existingItem != null)
+        if (position >= 0 && position < inventoryItems.Count)
         {
-            if (existingItem.itemCount > quantity)
+            Item item = inventoryItems[position];
+            if (item != null)
             {
-                existingItem.itemCount -= quantity;
-                OnItemQuantityChanged?.Invoke(existingItem);
-                return true;
+                inventoryItems[position] = null;
+                OnItemRemoved?.Invoke(item);
+            }
+        }
+    }
+    public void AddItemWithPosition(Item item, int position)//在库存中添加物品(指定位置)
+    {
+        if (position >= 0 && position < inventoryItems.Count)
+        {
+            if(inventoryItems[position] == null){
+                inventoryItems[position] = item;
+                OnItemAdded?.Invoke(item);
             }
             else
             {
-                return RemoveItem(existingItem);
+                if(inventoryItems[position].itemID == item.itemID)
+                {
+                    inventoryItems[position].itemCount += item.itemCount;
+                    OnItemQuantityChanged?.Invoke(item);
+                }
+                else
+                {
+                    Debug.LogError("尝试在已有的物品位置添加不同的物品");
+                }
             }
         }
-        return false;
     }
-    
-    /// <summary>
-    /// 获取所有物品
-    /// </summary>
-    /// <returns>所有物品列表</returns>
-    public List<Item> GetAllItems()
-    {
-        return inventoryItems;
-    }
-    
-    /// <summary>
-    /// 获取指定物品ID的物品
-    /// </summary>
-    /// <param name="itemID">要获取的物品ID</param>
-    /// <returns>指定物品ID的物品</returns>
     public Item GetItem(string itemID)
     {
         return inventoryItems.Find(x => x.itemID == itemID);
