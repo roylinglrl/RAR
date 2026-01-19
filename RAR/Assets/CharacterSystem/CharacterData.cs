@@ -9,8 +9,7 @@ public class CharacterData
     public int CurrentLevel { get; set; } = 1;//当前等级
     public float CurrentExperience { get; set; } = 0f;//当前经验值
     public bool isHurt = false;//是否受伤
-    public Item[] equipmentSlots = new Item[4] { null, null, null, null };//装备槽位
-    
+
     [NonSerialized]
     private CharacterSO CharacterSO;//角色的ScriptableObject数据
     public CharacterSO GetCharacterSO()//获取CharacterSO

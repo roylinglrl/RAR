@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -155,6 +156,7 @@ public enum ModifierType
     Multiplicative,//乘法修改器
     Adding_stacking,//加法堆叠修改器
 }
+[Serializable]
 public class AttributeModifier
 {
     public AttributeType AttributeType { get; private set; }//属性类型
