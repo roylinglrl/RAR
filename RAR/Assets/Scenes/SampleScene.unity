@@ -294,7 +294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebugInput
   itemData: {fileID: 11400000, guid: b316b58e4d5fcb846842b2f4c627706b, type: 2}
-  itemData2: {fileID: 0}
+  itemData2: {fileID: 11400000, guid: 60e2769feb3687046905223932bbc610, type: 2}
 --- !u!1001 &293926204
 PrefabInstance:
   m_ObjectHideFlags: 0
