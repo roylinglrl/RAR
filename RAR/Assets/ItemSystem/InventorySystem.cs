@@ -34,6 +34,14 @@ public class InventorySystem
                     OnInventorySlotChanged?.Invoke(slot);//刷新槽位
                     return true;
                 }
+                else if(amountRemaining > 0)
+                {
+                    int canAdd = amountRemaining;
+                    slot.AddToStack(canAdd);//添加到槽位
+                    amount -= canAdd;
+                    OnInventorySlotChanged?.Invoke(slot);//刷新槽位
+                    return AddToInventory(itemData, amount);//递归添加剩余物品
+                }
             }
         }
         else if(HasFreeSlot(out InventorySlot freeSlot))//如果有空闲槽位
