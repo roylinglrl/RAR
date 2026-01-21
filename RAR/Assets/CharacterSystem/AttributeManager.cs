@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-
+[Serializable]
 public class AttributeManager //属性管理器
 {
-    public Dictionary<AttributeType, float> BaseAttributes = new Dictionary<AttributeType, float>();//基础属性
-    public List<AttributeModifier> Modifiers = new List<AttributeModifier>();//属性修改器
+    [SerializeField]public SerializableDictionary<AttributeType, float> BaseAttributes = new SerializableDictionary<AttributeType, float>();//基础属性
+    [SerializeField]public List<AttributeModifier> Modifiers = new List<AttributeModifier>();//属性修改器
 
     public bool _isDirty = true;//是否需要重新计算属性
 
@@ -16,10 +16,15 @@ public class AttributeManager //属性管理器
 
     public AttributeManager()//属性管理器构造函数
     {
-        BaseAttributes = new Dictionary<AttributeType, float>();
+        BaseAttributes = new SerializableDictionary<AttributeType, float>();
         Modifiers = new List<AttributeModifier>();
         _isDirty = true;
         _cachedFinalAttributes = new Dictionary<AttributeType, float>();
+    }
+    //是否包含指定属性
+    public bool ContainsAttribute(AttributeType attributeType)
+    {
+        return BaseAttributes.ContainsKey(attributeType);
     }
 
     public void initializeDefaultAttributes()//初始化默认属性
@@ -47,7 +52,7 @@ public class AttributeManager //属性管理器
         //TODO : 初始化其他属性
         MarkDirty();
     }
-    private void MarkDirty()//标记属性为脏，需要重新计算
+    public void MarkDirty()//标记属性为脏，需要重新计算
     {
         _isDirty = true;
     }

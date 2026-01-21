@@ -4,11 +4,11 @@ using UnityEngine;
 [Serializable]//可序列化类
 public class CharacterData
 {
-    public String CharacterID { get; set; }//角色ID, 唯一标识符 从CharacterSO中获取静态数据
-    public String CharacterName { get; set; }//角色名称 从CharacterSO中获取静态数据
-    public int CurrentLevel { get; set; } = 1;//当前等级
-    public float CurrentExperience { get; set; } = 0f;//当前经验值
-    public bool isHurt = false;//是否受伤
+    [SerializeField]public String CharacterID;//角色ID, 唯一标识符 从CharacterSO中获取静态数据
+    [SerializeField]public String CharacterName;//角色名称 从CharacterSO中获取静态数据
+    [SerializeField]public int CurrentLevel = 1;//当前等级
+    [SerializeField]public float CurrentExperience = 0f;//当前经验值
+    [SerializeField]public bool isHurt = false;//是否受伤
 
     [NonSerialized]
     private CharacterSO CharacterSO;//角色的ScriptableObject数据
@@ -29,6 +29,11 @@ public class CharacterData
         CharacterID = characterID;
         Initialize();
     }
+    public CharacterData(CharacterSO characterSO)//角色数据构造函数
+    {
+        CharacterID = characterSO.CharacterID;
+        InitializeFromSO(characterSO);
+    }
     public void Initialize()//从CharacterSO初始化角色数据
     {
         GetCharacterSO(CharacterID);
@@ -38,6 +43,11 @@ public class CharacterData
             return;
         }
         CharacterName = CharacterSO.CharacterName;
+    }
+    public void InitializeFromSO(CharacterSO characterSO)//从CharacterSO初始化角色数据
+    {
+        CharacterID = characterSO.CharacterID;
+        CharacterName = characterSO.CharacterName;
     }
     public void GetCharacterSO(String characterID)//根据ID获取CharacterSO
     {

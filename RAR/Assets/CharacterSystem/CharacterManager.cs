@@ -33,6 +33,22 @@ public class CharacterManager : MonoBehaviour
         CharacterData newCharacterData = new CharacterData(characterID);
         UnlockedCharacters.Add(newCharacterData);
     }
+    public void AddNewCharacter(CharacterSO characterSO)//添加新角色到已解锁列表
+    {
+        if (characterSO == null)
+        {
+            Debug.LogError("CharacterSO is null.");
+            return;
+        }
+        if (UnlockedCharacters.Find(character => character.CharacterID == characterSO.CharacterID) != null)
+        {
+            Debug.Log("Character already unlocked: " + characterSO.CharacterID);
+            //TODO: 处理角色已解锁的情况
+            return;
+        }
+        CharacterData newCharacterData = new CharacterData(characterSO);
+        UnlockedCharacters.Add(newCharacterData);
+    }
     public void RemoveCharacter(String characterID)//从已解锁列表移除角色
     {
         CharacterData characterToRemove = UnlockedCharacters.Find(character => character.CharacterID == characterID);
@@ -60,6 +76,7 @@ public class CharacterManager : MonoBehaviour
         {
             Debug.LogError("Character not found in unlocked list: " + characterID);
         }
+        attributeManager.initializeDefaultAttributes();
     }
     public void AddExperience(float experience)//为当前角色添加经验值
     {
@@ -69,6 +86,7 @@ public class CharacterManager : MonoBehaviour
             return;
         }
         currentCharacterData.CurrentExperience += experience;
+        attributeManager.MarkDirty();
     }
     
 

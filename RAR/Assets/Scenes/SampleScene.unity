@@ -243,6 +243,7 @@ GameObject:
   - component: {fileID: 243813031}
   - component: {fileID: 243813032}
   - component: {fileID: 243813033}
+  - component: {fileID: 243813034}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -295,6 +296,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DebugInput
   itemData: {fileID: 11400000, guid: b316b58e4d5fcb846842b2f4c627706b, type: 2}
   itemData2: {fileID: 11400000, guid: 60e2769feb3687046905223932bbc610, type: 2}
+  characterSO: {fileID: 11400000, guid: 74bd196f83aa8944e9079e7df42b67fc, type: 2}
+--- !u!114 &243813034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 243813030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d7a8c1715fe1324ba9330bbd11147b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterManager
+  currentCharacterData:
+    CharacterID: 
+    CharacterName: 
+    CurrentLevel: 0
+    CurrentExperience: 0
+    isHurt: 0
+  UnlockedCharacters:
+  - CharacterID: 
+    CharacterName: 
+    CurrentLevel: 0
+    CurrentExperience: 0
+    isHurt: 0
+  attributeManager:
+    BaseAttributes:
+      keys: 
+      values: []
+    Modifiers: []
+    _isDirty: 1
 --- !u!1001 &293926204
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1348,7 +1380,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -425}
+  m_AnchoredPosition: {x: 0, y: -459}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2005501476
@@ -1364,12 +1396,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
   m_Padding:
-    m_Left: 15
-    m_Right: 15
-    m_Top: 15
-    m_Bottom: 15
+    m_Left: 5
+    m_Right: 5
+    m_Top: 5
+    m_Bottom: 5
   m_ChildAlignment: 0
-  m_Spacing: 5
+  m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -1404,7 +1436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.6862745}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

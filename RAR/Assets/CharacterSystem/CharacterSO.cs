@@ -6,9 +6,9 @@ using UnityEngine;
 	public class CharacterSO: ScriptableObject
 	{
 		//角色的各项数据
-		public String CharacterName;//角色名称
+		[Header("角色名称")]public String CharacterName;//角色名称
 		public String CharacterID;//角色ID
-		public String CharacterDesc;//角色描述
+		[TextArea(4, 10)]public String CharacterDesc;//角色描述
 		public String CharacterType;//角色类型
 		//角色的外观
 		public Sprite CharacterIcon;//角色图标
