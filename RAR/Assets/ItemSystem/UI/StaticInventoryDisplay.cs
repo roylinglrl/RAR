@@ -4,7 +4,7 @@ public class StaticInventoryDisplay : InventoryDisplay
 {
     [SerializeField] private InventoryHolder inventoryHolder;
     [SerializeField]private InventorySlotForUI[] inventorySlotForUI;
-    public override void Start()
+    protected override void Start()
     {
         base.Start();
         if(inventoryHolder != null)//判断背包持有者不为空
@@ -29,4 +29,5 @@ public class StaticInventoryDisplay : InventoryDisplay
             inventorySlotForUI[i].Init(inventorySystem.InventorySlots[i]);
         }
     }
+
 }

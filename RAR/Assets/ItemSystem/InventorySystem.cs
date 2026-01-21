@@ -44,13 +44,21 @@ public class InventorySystem
                 }
             }
         }
-        else if(HasFreeSlot(out InventorySlot freeSlot))//如果有空闲槽位
+        while (amount > 0)
         {
-            freeSlot.UpdateSlot(itemData, amount);
-            OnInventorySlotChanged?.Invoke(freeSlot);
-            return true;
+            if(HasFreeSlot(out InventorySlot freeSlot))//如果有空闲槽位
+            {
+                int amountToAdd = Mathf.Min(amount, itemData.MaxStack);//计算可添加数量
+                freeSlot.UpdateSlot(itemData, amountToAdd);//更新槽位
+                amount -= amountToAdd;//更新剩余数量
+                OnInventorySlotChanged?.Invoke(freeSlot);//刷新槽位
+            }
+            else
+            {
+                return false;//没有空闲槽位
+            }
         }
-        return false;
+        return true;//添加成功
     }
     public bool ContainsItem(ItemData itemData,out List<InventorySlot> slots)
     {
