@@ -5,14 +5,14 @@ using UnityEngine;
 [Serializable]
 public class InventorySlot
 {
-    [SerializeField] private ItemData itemData;//物品数据,后续将会替换为物品实例以储存可变变量
+    [SerializeField] private ItemInstance itemInstance;//物品数据,后续将会替换为物品实例以储存可变变量
     [SerializeField] private int itemCount;//物品数量
-    public ItemData ItemData => itemData;
+    public ItemInstance ItemData => itemInstance;
     [SerializeField]public int ItemCount => itemCount;
     //物品槽的构造函数
-    public InventorySlot(ItemData sourceItemData, int amount)
+    public InventorySlot(ItemInstance sourceItemData, int amount)
     {
-        this.itemData = sourceItemData;
+        this.itemInstance = sourceItemData;
         this.itemCount = amount;
     }
     //物品槽的默认构造函数
@@ -23,20 +23,28 @@ public class InventorySlot
     //将新物品分配给物品槽
     public void AssignItem(InventorySlot newInventorySlot)
     {
-        if(itemData == newInventorySlot.ItemData)
-        AddToStack(newInventorySlot.ItemCount);
+        if(newInventorySlot.itemInstance != null)
+        {
+            this.itemInstance = newInventorySlot.itemInstance.Clone() as ItemInstance;
+            this.itemCount = newInventorySlot.ItemCount;
+        }
         else
         {
-            itemData = newInventorySlot.ItemData;
-            itemCount = 0;
-            AddToStack(newInventorySlot.ItemCount);
+            ClearSlot();
         }
+    }
+    public bool CanStackWith(InventorySlot otherSlot)
+    {
+        if(itemInstance == null || otherSlot.itemInstance == null)return false;
+        if(itemInstance.ItemData != otherSlot.itemInstance.ItemData)return false;
+        if(itemInstance.ItemData.MaxStack == 1)return false;
+        return true;
     }
     //清空物品槽
     public void ClearSlot()
     {
-        this.itemData = null;
-        this.itemCount = -1;
+        this.itemInstance = null;
+        this.itemCount = 0;
     }
     //将物品添加到物品槽的栈中
     public void AddToStack(int amount)
@@ -46,23 +54,27 @@ public class InventorySlot
     //从物品槽的栈中移除物品
     public void RemoveFromStack(int amount)
     {
-        itemCount -= amount;
+        itemCount = Mathf.Max(0, itemCount - amount);
+        if (itemCount == 0)
+        {
+            ClearSlot();
+        }
     }
     //检查物品槽是否有足够的空间来添加物品
     public bool RoomLeftInStack(int amountToAdd,out int amountRemaining)
     {
-        amountRemaining = itemData != null ? itemData.MaxStack - itemCount : 0;
+        amountRemaining = itemInstance != null ? itemInstance.ItemData.MaxStack - itemCount : 0;
         return amountRemaining >= amountToAdd;
     }
     public bool RoomLeftInStack(int amountToAdd)
     {
-        if(itemCount + amountToAdd <= itemData.MaxStack)return true;
+        if(itemCount + amountToAdd <= itemInstance.ItemData.MaxStack)return true;
         else return false;
     }
 
-    public void UpdateSlot(ItemData newItemData, int newItemCount)
+    public void UpdateSlot(ItemInstance  newItemInstance, int newItemCount)
     {
-        this.itemData = newItemData;
+        this.itemInstance = newItemInstance;
         this.itemCount = newItemCount;
     }
     public bool SplitStack(out InventorySlot splitSlot)
@@ -74,7 +86,8 @@ public class InventorySlot
         }
         int half = Mathf.RoundToInt(itemCount / 2);
         RemoveFromStack(half);
-        splitSlot = new InventorySlot(itemData, half);
+        var cloneInstance = itemInstance.Clone() as ItemInstance;
+        splitSlot = new InventorySlot(cloneInstance, half);
         return true;
     }
 }

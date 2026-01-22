@@ -70,4 +70,8 @@ public class InventorySystem
         freeSlot = inventorySlots.FirstOrDefault(slot => slot.ItemData == null);
         return freeSlot != null;
     }
+    public void AddItemsFromLootTable(string lootTableID)
+    {
+        //TODO:从战利品表添加物品
+    }
 }

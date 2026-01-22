@@ -18,11 +18,11 @@ public class DebugInput : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.J))
         {
-            GetComponent<InventoryHolder>().InventorySystem.AddToInventory(itemData, 1);
+
         }
         if(Input.GetKeyDown(KeyCode.K))
         {
-            GetComponent<InventoryHolder>().InventorySystem.AddToInventory(itemData2, 1);
+
         }
         if (Input.GetKeyDown(KeyCode.L))
         {

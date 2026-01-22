@@ -1,17 +1,17 @@
-using System;
-using UnityEngine;
-using UnityEngine.Events;
-
-[Serializable]
-public class InventoryHolder:MonoBehaviour
-{
-    [SerializeField] private int InventorySize;
-    [SerializeField] protected InventorySystem inventorySystem;
-    public InventorySystem InventorySystem => inventorySystem;
-    public static UnityAction<InventorySystem> OnDynamicInventoryDisplayRequested;
+    using System;
+    using UnityEngine;
+    using UnityEngine.Events;
     
-    private void Awake()
+    [Serializable]
+    public class InventoryHolder : MonoBehaviour
     {
-        inventorySystem = new InventorySystem(InventorySize);
+        [SerializeField] private int InventorySize;
+        [SerializeField] protected InventorySystem primaryInventorySystem;
+        public InventorySystem PrimaryInventorySystem => primaryInventorySystem; // 修改属性名为PascalCase
+        public static UnityAction<InventorySystem> OnDynamicInventoryDisplayRequested;
+        
+        protected virtual void Awake()
+        {
+            primaryInventorySystem = new InventorySystem(InventorySize);
+        }
     }
-}

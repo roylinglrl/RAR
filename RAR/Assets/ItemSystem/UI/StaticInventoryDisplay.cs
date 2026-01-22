@@ -9,8 +9,8 @@ public class StaticInventoryDisplay : InventoryDisplay
         base.Start();
         if(inventoryHolder != null)//判断背包持有者不为空
         {
-            inventorySystem = inventoryHolder.InventorySystem;//获取物品槽
-            AssignSlot(inventoryHolder.InventorySystem);
+            inventorySystem = inventoryHolder.PrimaryInventorySystem;//获取物品槽
+            AssignSlot(inventoryHolder.PrimaryInventorySystem);
             inventorySystem.OnInventorySlotChanged += UpdateSlot;
         }
         else Debug.LogError($"{this.gameObject} 的物品槽持有者为空");
