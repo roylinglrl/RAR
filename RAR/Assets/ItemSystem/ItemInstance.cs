@@ -1,10 +1,26 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 
 [Serializable]
 public abstract class ItemInstance
 {
-    public ItemData ItemData{get;protected set;}
+    [SerializeReference] protected ItemData itemData;
+    public ItemData ItemData => itemData;
     public abstract object Clone();
+}
+[Serializable]
+public class StaticItemInstance : ItemInstance
+{
+    public StaticItemInstance(ItemData newItemData)
+    {
+        this.itemData = newItemData;
+    }
+    public override object Clone()
+    {
+        return new StaticItemInstance(ItemData);
+    }
 }
 [Serializable]
 public class DurableItemInstance : ItemInstance
@@ -13,7 +29,7 @@ public class DurableItemInstance : ItemInstance
     public int MaxDurability;
     public DurableItemInstance(ItemData itemData,int maxDurability)
     {
-        ItemData = itemData;
+        this.itemData = itemData;
         MaxDurability = maxDurability;
         CurrentDurability = maxDurability;
     }

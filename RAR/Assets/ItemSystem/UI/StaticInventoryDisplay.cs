@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class StaticInventoryDisplay : InventoryDisplay
 {
-    [SerializeField] private InventoryHolder inventoryHolder;
-    [SerializeField]private InventorySlotForUI[] inventorySlotForUI;
+    [SerializeField]protected InventoryHolder inventoryHolder;
+    [SerializeField]protected InventorySlotForUI[] inventorySlotForUI;
     protected override void Start()
     {
         base.Start();

@@ -31,8 +31,8 @@ public abstract class InventoryDisplay : MonoBehaviour
         bool isShiftPressed = Keyboard.current.leftShiftKey.isPressed;
 
 
-        if(clickedUISlot.AssignedInventorySlot.ItemData != null &&
-        currentItemData.AssignedInventorySlot.ItemData == null)
+        if(clickedUISlot.AssignedInventorySlot.ItemInstance != null &&
+        currentItemData.AssignedInventorySlot.ItemInstance == null)
         {
             if(isShiftPressed && clickedUISlot.AssignedInventorySlot.SplitStack(out InventorySlot splitSlot))
             {
@@ -46,23 +46,24 @@ public abstract class InventoryDisplay : MonoBehaviour
                 return;
             }
         }
-        if(clickedUISlot.AssignedInventorySlot.ItemData == null &&
-        currentItemData.AssignedInventorySlot.ItemData != null)
+        if(clickedUISlot.AssignedInventorySlot.ItemInstance == null &&
+        currentItemData.AssignedInventorySlot.ItemInstance != null)
         {
             clickedUISlot.AssignedInventorySlot.AssignItem(currentItemData.AssignedInventorySlot);//更新点击的物品槽
             clickedUISlot.UpdateSlotUI();//更新点击的物品槽
             currentItemData.CloseSlot();//关闭当前物品槽
             return;
         }
-        if(clickedUISlot.AssignedInventorySlot.ItemData != null &&
-        currentItemData.AssignedInventorySlot.ItemData != null)
+        if(clickedUISlot.AssignedInventorySlot.ItemInstance != null &&
+        currentItemData.AssignedInventorySlot.ItemInstance != null)
         {
-            bool isSameItem = clickedUISlot.AssignedInventorySlot.ItemData == currentItemData.AssignedInventorySlot.ItemData;
+            bool isSameItem = clickedUISlot.AssignedInventorySlot.ItemInstance.ItemData == currentItemData.AssignedInventorySlot.ItemInstance.ItemData;
             if(isSameItem
                 && clickedUISlot.AssignedInventorySlot.RoomLeftInStack(currentItemData.AssignedInventorySlot.ItemCount)
             )
             {
-                clickedUISlot.AssignedInventorySlot.AssignItem(currentItemData.AssignedInventorySlot);//将物品添加到物品槽的栈中
+                int currentCount = currentItemData.AssignedInventorySlot.ItemCount;
+                clickedUISlot.AssignedInventorySlot.AddToStack(currentCount);//将物品添加到物品槽的栈中
                 clickedUISlot.UpdateSlotUI();//更新点击的物品槽
                 currentItemData.CloseSlot();//清空当前物品槽
             }
@@ -74,7 +75,7 @@ public abstract class InventoryDisplay : MonoBehaviour
                     int remain = currentItemData.AssignedInventorySlot.ItemCount - leftStack;
                     clickedUISlot.AssignedInventorySlot.AddToStack(leftStack);//将物品添加到物品槽的栈中
                     clickedUISlot.UpdateSlotUI();//更新点击的物品槽
-                    var newItem = new InventorySlot(currentItemData.AssignedInventorySlot.ItemData, remain);//创建新物品
+                    var newItem = new InventorySlot(currentItemData.AssignedInventorySlot.ItemInstance, remain);//创建新物品
                     currentItemData.CloseSlot();//清空当前物品槽
                     currentItemData.UpdateItemSlot(newItem);//更新当前显示的物品数据
                     
@@ -86,12 +87,10 @@ public abstract class InventoryDisplay : MonoBehaviour
                 SwapSlots(clickedUISlot);//交换物品槽
             }
         }
-    
-    
     }
         private void SwapSlots(InventorySlotForUI clickedUISlot)
     {
-        var clone = new InventorySlot(currentItemData.AssignedInventorySlot.ItemData, currentItemData.AssignedInventorySlot.ItemCount);
+        var clone = new InventorySlot(currentItemData.AssignedInventorySlot.ItemInstance, currentItemData.AssignedInventorySlot.ItemCount);
         currentItemData.CloseSlot();
         currentItemData.UpdateItemSlot(clickedUISlot.AssignedInventorySlot);//更新当前显示的物品数据
         clickedUISlot.AssignedInventorySlot.AssignItem(clone);//更新点击的物品槽

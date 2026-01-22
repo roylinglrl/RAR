@@ -20,13 +20,13 @@ public class CurrentItemData : MonoBehaviour
     public void UpdateItemSlot(InventorySlot newInventorySlot)
     {
         AssignedInventorySlot.AssignItem(newInventorySlot);//更新当前物品槽的物品数据
-        ItemSprite.sprite = newInventorySlot.ItemData.ItemIcon;//更新当前显示的物品图标
+        ItemSprite.sprite = newInventorySlot.ItemInstance.ItemData.ItemIcon;//更新当前显示的物品图标
         ItemCount.text = newInventorySlot.ItemCount.ToString();//更新当前显示的物品数量
         ItemSprite.color = Color.white;//显示物品图标
     }
     void Update()
     {
-        if(AssignedInventorySlot.ItemData != null)
+        if(AssignedInventorySlot.ItemInstance != null)
         {
             transform.position = Mouse.current.position.ReadValue();//更新当前物品数据的位置
             if(Mouse.current.leftButton.wasPressedThisFrame && !IsPointerOverUI())

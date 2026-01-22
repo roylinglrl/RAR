@@ -25,9 +25,9 @@ public class InventorySlotForUI : MonoBehaviour
     }
     public void UpdateSlotUI(InventorySlot inventorySlot)
     {
-        if(inventorySlot.ItemData != null)
+        if(inventorySlot.ItemInstance != null)
         {
-            ItemSprite.sprite = inventorySlot.ItemData.ItemIcon;
+            ItemSprite.sprite = inventorySlot.ItemInstance.ItemData.ItemIcon;
             ItemSprite.color = Color.white;
             if(inventorySlot.ItemCount > 0) ItemCount.text = inventorySlot.ItemCount.ToString();
             else ItemCount.text = "";

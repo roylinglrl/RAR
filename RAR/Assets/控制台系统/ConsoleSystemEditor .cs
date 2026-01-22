@@ -77,7 +77,7 @@ namespace Assets.控制台系统
         public static void CreateConsoleSystem()
         {
             // 创建画布（如果不存在）
-            Canvas canvas = GameObject.FindObjectOfType<Canvas>();
+            Canvas canvas = GameObject.FindFirstObjectByType<Canvas>();
             if (canvas == null)
             {
                 GameObject canvasGO = new GameObject("Canvas");
@@ -201,7 +201,7 @@ namespace Assets.控制台系统
             consoleUI.clearButton = null; // 可选添加清除按钮
 
             // 创建控制台系统（如果不存在）
-            ConsoleSystem system = GameObject.FindObjectOfType<ConsoleSystem>();
+            ConsoleSystem system = GameObject.FindFirstObjectByType<ConsoleSystem>();
             if (system == null)
             {
                 GameObject systemGO = new GameObject("ConsoleSystem");

@@ -10,19 +10,20 @@ using UnityEngine.Events;
 public class ConsoleEvent : UnityEvent<string[]> { }
 
 /// <summary>
-/// Unity ¿ØÖÆÌ¨ÏµÍ³Ö÷¿ØÖÆÆ÷
+/// Unityæ§åˆ¶å°ç³»ç»Ÿï¼Œæä¾›æ¸¸æˆå†…å‘½ä»¤è¡Œç•Œé¢åŠŸèƒ½
+/// æ”¯æŒå†…ç½®å‘½ä»¤ã€è‡ªå®šä¹‰å‘½ä»¤æ³¨å†Œã€å†å²è®°å½•ã€è‡ªåŠ¨è¡¥å…¨ç­‰åŠŸèƒ½
 /// </summary>
 public class ConsoleSystem : MonoBehaviour
 {
-    [Header("¿ØÖÆÌ¨ÉèÖÃ")]
-    [SerializeField] public KeyCode toggleKey = KeyCode.BackQuote; // ` ¼ü
-    [SerializeField] public bool enableInBuild = false; // ·¢²¼°æ±¾ÊÇ·ñÆôÓÃ
-    [SerializeField] public bool logToUnityConsole = true; // ÊÇ·ñÍ¬Ê±Êä³öµ½Unity¿ØÖÆ
+    [Header("æ§åˆ¶å°è®¾ç½®")]
+    [SerializeField] public KeyCode toggleKey = KeyCode.BackQuote; // ` é”®
+    [SerializeField] public bool enableInBuild = false; // æ„å»ºç‰ˆæœ¬ä¸­æ˜¯å¦å¯ç”¨
+    [SerializeField] public bool logToUnityConsole = true; // æ˜¯å¦åŒæ—¶è¾“å‡ºåˆ°Unityæ§åˆ¶å°
 
-    [Header("UI ÒıÓÃ")]
+    [Header("UI è®¾ç½®")]
     [SerializeField] public ConsoleUI consoleUI;
 
-    [Header("ÃüÁîÉèÖÃ")]
+    [Header("å‘½ä»¤é…ç½®")]
     [SerializeField] public List<ConsoleCommand> registeredCommands = new List<ConsoleCommand>();
 
     public Dictionary<string, ConsoleCommand> commandDictionary = new Dictionary<string, ConsoleCommand>();
@@ -30,13 +31,17 @@ public class ConsoleSystem : MonoBehaviour
     public int historyIndex = -1;
 
     public static ConsoleSystem instance;
+
+    /// <summary>
+    /// è·å–æ§åˆ¶å°ç³»ç»Ÿå®ä¾‹ï¼Œå¦‚æœä¸å­˜åœ¨åˆ™åˆ›å»ºæ–°çš„å®ä¾‹
+    /// </summary>
     public static ConsoleSystem Instance
     {
         get
         {
             if (instance == null)
             {
-                instance = FindObjectOfType<ConsoleSystem>();
+                instance = FindFirstObjectByType<ConsoleSystem>();
                 if (instance == null)
                 {
                     GameObject go = new GameObject("ConsoleSystem");
@@ -47,6 +52,10 @@ public class ConsoleSystem : MonoBehaviour
             return instance;
         }
     }
+
+    /// <summary>
+    /// åˆå§‹åŒ–æ§åˆ¶å°ç³»ç»Ÿï¼Œå¤„ç†å•ä¾‹æ¨¡å¼å’Œæ„å»ºç‰ˆæœ¬æ£€æŸ¥
+    /// </summary>
     void Awake()
     {
         if (instance != null && instance != this)
@@ -58,7 +67,7 @@ public class ConsoleSystem : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // ¼ì²éÊÇ·ñÔÚ·¢²¼°æ±¾ÖĞÆôÓÃ
+        // æ£€æŸ¥æ˜¯å¦åœ¨æ„å»ºç‰ˆæœ¬ä¸­å¯ç”¨
         if (!enableInBuild && !Debug.isDebugBuild)
         {
             gameObject.SetActive(false);
@@ -67,6 +76,10 @@ public class ConsoleSystem : MonoBehaviour
 
         InitializeCommands();
     }
+
+    /// <summary>
+    /// æ›´æ–°æ§åˆ¶å°çŠ¶æ€ï¼Œå¤„ç†å¼€å…³æŒ‰é”®å’Œè¾“å…¥äº‹ä»¶
+    /// </summary>
     void Update()
     {
         if (Input.GetKeyDown(toggleKey))
@@ -79,33 +92,40 @@ public class ConsoleSystem : MonoBehaviour
             HandleConsoleInput();
         }
     }
+
+    /// <summary>
+    /// åˆå§‹åŒ–æ‰€æœ‰å‘½ä»¤ï¼ŒåŒ…æ‹¬å†…ç½®å‘½ä»¤ã€æ³¨å†Œå‘½ä»¤å’Œå±æ€§æ ‡è®°å‘½ä»¤
+    /// </summary>
     public void InitializeCommands()
     {
-        // Çå³ıÏÖÓĞÃüÁî
+        // æ¸…ç©ºç°æœ‰å‘½ä»¤å­—å…¸
         commandDictionary.Clear();
 
-        // ×¢²áÄÚÖÃÃüÁî
+        // æ³¨å†Œå†…ç½®å‘½ä»¤
         RegisterBuiltInCommands();
 
-        // ×¢²áÊÖ¶¯Ìí¼ÓµÄÃüÁî
+        // æ³¨å†Œç”¨æˆ·å®šä¹‰çš„å‘½ä»¤
         foreach (var cmd in registeredCommands)
         {
             RegisterCommand(cmd);
         }
 
-        // ×Ô¶¯²éÕÒ²¢×¢²áËùÓĞ±ê¼ÇÁË [ConsoleCommand] ÌØĞÔµÄ·½·¨
+        // è‡ªåŠ¨æ³¨å†Œæ ‡è®°äº†[ConsoleCommand]ç‰¹æ€§çš„é™æ€æ–¹æ³•
         AutoRegisterAttributeCommands();
 
-        Log($"¿ØÖÆÌ¨ÒÑ³õÊ¼»¯£¬¿ÉÓÃÃüÁîÊı: {commandDictionary.Count}");
+        Log($"æ§åˆ¶å°åˆå§‹åŒ–å®Œæˆï¼Œå…±åŠ è½½å‘½ä»¤: {commandDictionary.Count}");
     }
 
+    /// <summary>
+    /// æ³¨å†Œå†…ç½®çš„åŸºç¡€å‘½ä»¤ï¼Œå¦‚helpã€clearã€exitç­‰
+    /// </summary>
     private void RegisterBuiltInCommands()
     {
-        // °ïÖúÃüÁî
+        // å¸®åŠ©å‘½ä»¤
         RegisterCommand(new ConsoleCommand
         {
             command = "help",
-            description = "ÏÔÊ¾ËùÓĞÃüÁî»òÖ¸¶¨ÃüÁîµÄ°ïÖú",
+            description = "æ˜¾ç¤ºæ‰€æœ‰å¯ç”¨å‘½ä»¤æˆ–æŒ‡å®šå‘½ä»¤çš„å¸®åŠ©ä¿¡æ¯",
             usage = "help [command]",
             action = (args) =>
             {
@@ -119,102 +139,106 @@ public class ConsoleSystem : MonoBehaviour
                 }
             }
         });
-        // ÇåÆÁÃüÁî
+        // æ¸…å±å‘½ä»¤
         RegisterCommand(new ConsoleCommand
         {
             command = "clear",
-            description = "Çå³ı¿ØÖÆÌ¨Êä³ö",
+            description = "æ¸…ç©ºæ§åˆ¶å°è¾“å‡º",
             action = (args) => consoleUI?.ClearOutput()
         });
-        // ÍË³öÃüÁî
+        // é€€å‡ºå‘½ä»¤
         RegisterCommand(new ConsoleCommand
         {
             command = "exit",
-            description = "¹Ø±Õ¿ØÖÆÌ¨",
+            description = "å…³é—­æ§åˆ¶å°",
             action = (args) => HideConsole()
         });
-        // ÏµÍ³ĞÅÏ¢ÃüÁî
+        // ç³»ç»Ÿä¿¡æ¯å‘½ä»¤
         RegisterCommand(new ConsoleCommand
         {
             command = "sysinfo",
-            description = "ÏÔÊ¾ÏµÍ³ĞÅÏ¢",
+            description = "æ˜¾ç¤ºç³»ç»Ÿä¿¡æ¯",
             action = (args) =>
             {
-                Log($"Unity°æ±¾: {Application.unityVersion}");
-                Log($"Æ½Ì¨: {Application.platform}");
-                Log($"ÄÚ´æÊ¹ÓÃ: {System.GC.GetTotalMemory(false) / 1024 / 1024} MB");
-                Log($"Ö¡ÂÊ: {1.0f / Time.deltaTime:F1}");
-                Log($"ÓÎÏ·Ê±¼ä: {Time.time:F1}Ãë");
+                Log($"Unityç‰ˆæœ¬: {Application.unityVersion}");
+                Log($"å¹³å°: {Application.platform}");
+                Log($"å†…å­˜ä½¿ç”¨: {System.GC.GetTotalMemory(false) / 1024 / 1024} MB");
+                Log($"å¸§ç‡: {1.0f / Time.deltaTime:F1}");
+                Log($"æ¸¸æˆæ—¶é—´: {Time.time:F1}ç§’");
             }
         });
-        // Ê±¼äËõ·ÅÃüÁî
+        // æ—¶é—´ç¼©æ”¾å‘½ä»¤
         RegisterCommand(new ConsoleCommand
         {
             command = "timescale",
-            description = "ÉèÖÃÓÎÏ·Ê±¼äËõ·Å",
+            description = "è®¾ç½®æ¸¸æˆæ—¶é—´ç¼©æ”¾",
             usage = "timescale <value>",
             action = (args) =>
             {
                 if (args.Length == 0)
                 {
-                    Log($"µ±Ç°Ê±¼äËõ·Å: {Time.timeScale}");
+                    Log($"å½“å‰æ—¶é—´ç¼©æ”¾: {Time.timeScale}");
                     return;
                 }
                 if (float.TryParse(args[0], out float scale))
                 {
                     Time.timeScale = Mathf.Clamp(scale, 0f, 100f);
-                    Log($"Ê±¼äËõ·ÅÒÑÉèÖÃÎª: {Time.timeScale}");
+                    Log($"æ—¶é—´ç¼©æ”¾å·²è®¾ç½®ä¸º: {Time.timeScale}");
                 }
                 else
                 {
-                    LogError("ÎŞĞ§µÄÊ±¼äËõ·ÅÖµ");
+                    LogError("æ— æ•ˆçš„æ—¶é—´ç¼©æ”¾å€¼");
                 }
             }
         });
-        // ÎŞµĞÄ£Ê½ÃüÁî
+        // æ— æ•Œæ¨¡å¼å‘½ä»¤
         RegisterCommand(new ConsoleCommand
         {
             command = "godmode",
-            description = "ÇĞ»»ÎŞµĞÄ£Ê½",
+            description = "åˆ‡æ¢æ— æ•Œæ¨¡å¼",
             action = (args) =>
             {
                 bool godMode = PlayerPrefs.GetInt("GodMode", 0) == 1;
                 godMode = !godMode;
                 PlayerPrefs.SetInt("GodMode", godMode ? 1 : 0);
-                Log($"ÎŞµĞÄ£Ê½: {(godMode ? "¿ªÆô" : "¹Ø±Õ")}");
+                Log($"æ— æ•Œæ¨¡å¼: {(godMode ? "å¼€å¯" : "å…³é—­")}");
             }
         });
-        // ½ğ±ÒÃüÁî
+        // æ·»åŠ é‡‘å¸
         RegisterCommand(new ConsoleCommand
         {
             command = "addgold",
-            description = "Ìí¼Ó½ğ±Ò",
+            description = "æ·»åŠ é‡‘å¸",
             usage = "addgold <amount>",
             action = (args) =>
             {
                 if (args.Length == 0)
                 {
-                    LogError("ĞèÒªÖ¸¶¨½ğ±ÒÊıÁ¿");
+                    LogError("éœ€è¦æŒ‡å®šé‡‘å¸æ•°é‡");
                     return;
                 }
                 if (int.TryParse(args[0], out int amount))
                 {
-                    // ÕâÀï¿ÉÒÔ¸ù¾İÄãµÄÓÎÏ·Âß¼­ĞŞ¸Ä
+                    // è¿™é‡Œåº”è¯¥æ ¹æ®å®é™…æ¸¸æˆé€»è¾‘è°ƒæ•´
                     int currentGold = PlayerPrefs.GetInt("Gold", 0);
                     currentGold += amount;
                     PlayerPrefs.SetInt("Gold", currentGold);
-                    Log($"½ğ±ÒÒÑÌí¼Ó£¬µ±Ç°½ğ±Ò: {currentGold}");
+                    Log($"é‡‘å¸å·²æ·»åŠ ï¼Œå½“å‰é‡‘å¸: {currentGold}");
                 }
                 else
                 {
-                    LogError("ÎŞĞ§µÄ½ğ±ÒÊıÁ¿");
+                    LogError("æ— æ•ˆçš„é‡‘å¸æ•°é‡");
                 }
             }
         });
     }
+
+    /// <summary>
+    /// è‡ªåŠ¨æ³¨å†Œæ ‡è®°äº†ConsoleCommandç‰¹æ€§çš„é™æ€æ–¹æ³•
+    /// </summary>
     private void AutoRegisterAttributeCommands()
     {
-        // ²éÕÒËùÓĞ³ÌĞò¼¯ÖĞ±ê¼ÇÁË ConsoleCommand ÌØĞÔµÄ·½·¨
+        // éå†æ‰€æœ‰ç¨‹åºé›†ä¸­çš„æ ‡è®°æ–¹æ³•
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
         foreach (var assembly in assemblies)
@@ -235,11 +259,16 @@ public class ConsoleSystem : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"×Ô¶¯×¢²áÃüÁîÊ±³ö´í: {e.Message}");
+                Debug.LogWarning($"è‡ªåŠ¨æ³¨å†Œå‘½ä»¤æ—¶å‡ºé”™: {e.Message}");
             }
         }
     }
 
+    /// <summary>
+    /// æ³¨å†Œå¸¦æœ‰ç‰¹æ€§æ ‡è®°çš„æ–¹æ³•ä¸ºæ§åˆ¶å°å‘½ä»¤
+    /// </summary>
+    /// <param name="method">è¦æ³¨å†Œçš„æ–¹æ³•</param>
+    /// <param name="attr">æ–¹æ³•çš„æ§åˆ¶å°å‘½ä»¤ç‰¹æ€§</param>
     private void RegisterAttributeCommand(MethodInfo method, ConsoleCommandAttribute attr)
     {
         RegisterCommand(new ConsoleCommand
@@ -258,12 +287,12 @@ public class ConsoleSystem : MonoBehaviour
                     {
                         if (i < args.Length)
                         {
-                            // ³¢ÊÔ×ª»»²ÎÊıÀàĞÍ
+                            // å°è¯•è½¬æ¢å‚æ•°ç±»å‹
                             methodArgs[i] = Convert.ChangeType(args[i], parameters[i].ParameterType);
                         }
                         else
                         {
-                            // Ê¹ÓÃÄ¬ÈÏÖµ
+                            // ä½¿ç”¨é»˜è®¤å€¼
                             methodArgs[i] = parameters[i].DefaultValue;
                         }
                     }
@@ -272,16 +301,21 @@ public class ConsoleSystem : MonoBehaviour
                 }
                 catch (Exception e)
                 {
-                    LogError($"Ö´ĞĞÃüÁîÊ§°Ü: {e.Message}");
+                    LogError($"æ‰§è¡Œå‘½ä»¤å¤±è´¥: {e.Message}");
                 }
             }
         });
     }
+
+    /// <summary>
+    /// æ³¨å†Œä¸€ä¸ªæ–°çš„æ§åˆ¶å°å‘½ä»¤
+    /// </summary>
+    /// <param name="command">è¦æ³¨å†Œçš„å‘½ä»¤å¯¹è±¡</param>
     public void RegisterCommand(ConsoleCommand command)
     {
         if (commandDictionary.ContainsKey(command.command))
         {
-            Debug.LogWarning($"ÃüÁî '{command.command}' ÒÑ´æÔÚ£¬½«±»¸²¸Ç");
+            Debug.LogWarning($"å‘½ä»¤ '{command.command}' å·²å­˜åœ¨ï¼Œå°†è¢«è¦†ç›–");
         }
 
         commandDictionary[command.command.ToLower()] = command;
@@ -291,6 +325,11 @@ public class ConsoleSystem : MonoBehaviour
             consoleUI.UpdateAutoComplete(commandDictionary.Keys.ToList());
         }
     }
+
+    /// <summary>
+    /// å–æ¶ˆæ³¨å†ŒæŒ‡å®šåç§°çš„å‘½ä»¤
+    /// </summary>
+    /// <param name="commandName">è¦å–æ¶ˆæ³¨å†Œçš„å‘½ä»¤åç§°</param>
     public void UnregisterCommand(string commandName)
     {
         if (commandDictionary.ContainsKey(commandName.ToLower()))
@@ -299,9 +338,12 @@ public class ConsoleSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// å¤„ç†æ§åˆ¶å°è¾“å…¥äº‹ä»¶ï¼ŒåŒ…æ‹¬å†å²è®°å½•å¯¼èˆªå’Œè‡ªåŠ¨è¡¥å…¨
+    /// </summary>
     private void HandleConsoleInput()
     {
-        // ÀúÊ·¼ÇÂ¼µ¼º½
+        // å†å²è®°å½•å¯¼èˆª
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             NavigateHistory(-1);
@@ -311,13 +353,17 @@ public class ConsoleSystem : MonoBehaviour
             NavigateHistory(1);
         }
 
-        // ×Ô¶¯²¹È«
+        // è‡ªåŠ¨è¡¥å…¨
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             AutoComplete();
         }
     }
 
+    /// <summary>
+    /// å¯¼èˆªå‘½ä»¤å†å²è®°å½•
+    /// </summary>
+    /// <param name="direction">å¯¼èˆªæ–¹å‘ï¼Œ-1ä¸ºå‘ä¸Šï¼Œ1ä¸ºå‘ä¸‹</param>
     private void NavigateHistory(int direction)
     {
         if (commandHistory.Count == 0) return;
@@ -334,6 +380,9 @@ public class ConsoleSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// æ‰§è¡Œå‘½ä»¤è‡ªåŠ¨è¡¥å…¨åŠŸèƒ½
+    /// </summary>
     private void AutoComplete()
     {
         string input = consoleUI?.GetInputText() ?? "";
@@ -349,29 +398,33 @@ public class ConsoleSystem : MonoBehaviour
         }
         else if (matches.Count > 1)
         {
-            Log($"¿ÉÄÜµÄÃüÁî: {string.Join(", ", matches)}");
+            Log($"å¯èƒ½çš„å‘½ä»¤: {string.Join(", ", matches)}");
         }
     }
 
+    /// <summary>
+    /// æ‰§è¡Œè¾“å…¥çš„å‘½ä»¤å­—ç¬¦ä¸²
+    /// </summary>
+    /// <param name="input">å®Œæ•´çš„å‘½ä»¤è¾“å…¥å­—ç¬¦ä¸²</param>
     public void ExecuteCommand(string input)
     {
         if (string.IsNullOrWhiteSpace(input)) return;
 
-        // Ìí¼Óµ½ÀúÊ·¼ÇÂ¼
+        // æ·»åŠ åˆ°å†å²è®°å½•
         commandHistory.Add(input);
         historyIndex = commandHistory.Count;
 
-        // ½âÎöÃüÁî
+        // è§£æå‘½ä»¤
         string[] parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length == 0) return;
 
         string commandName = parts[0].ToLower();
         string[] args = parts.Length > 1 ? parts.Skip(1).ToArray() : new string[0];
 
-        // ¼ÇÂ¼ÊäÈë
+        // è®°å½•å‘½ä»¤
         consoleUI?.AddOutputLine($"> {input}");
 
-        // Ö´ĞĞÃüÁî
+        // æ‰§è¡Œå‘½ä»¤
         if (commandDictionary.TryGetValue(commandName, out ConsoleCommand command))
         {
             try
@@ -380,15 +433,19 @@ public class ConsoleSystem : MonoBehaviour
             }
             catch (Exception e)
             {
-                LogError($"ÃüÁîÖ´ĞĞ´íÎó: {e.Message}");
+                LogError($"å‘½ä»¤æ‰§è¡Œå¼‚å¸¸: {e.Message}");
             }
         }
         else
         {
-            LogError($"Î´ÖªÃüÁî: {commandName}");
+            LogError($"æœªçŸ¥å‘½ä»¤: {commandName}");
         }
     }
 
+    /// <summary>
+    /// è¾“å‡ºæ™®é€šæ—¥å¿—æ¶ˆæ¯
+    /// </summary>
+    /// <param name="message">è¦è¾“å‡ºçš„æ¶ˆæ¯</param>
     public void Log(string message)
     {
         consoleUI?.AddOutputLine(message);
@@ -399,9 +456,13 @@ public class ConsoleSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// è¾“å‡ºè­¦å‘Šæ—¥å¿—æ¶ˆæ¯
+    /// </summary>
+    /// <param name="message">è¦è¾“å‡ºçš„è­¦å‘Šæ¶ˆæ¯</param>
     public void LogWarning(string message)
     {
-        consoleUI?.AddOutputLine($"<color=yellow>[¾¯¸æ] {message}</color>");
+        consoleUI?.AddOutputLine($"<color=yellow>[è­¦å‘Š] {message}</color>");
 
         if (logToUnityConsole)
         {
@@ -409,9 +470,13 @@ public class ConsoleSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// è¾“å‡ºé”™è¯¯æ—¥å¿—æ¶ˆæ¯
+    /// </summary>
+    /// <param name="message">è¦è¾“å‡ºçš„é”™è¯¯æ¶ˆæ¯</param>
     public void LogError(string message)
     {
-        consoleUI?.AddOutputLine($"<color=red>[´íÎó] {message}</color>");
+        consoleUI?.AddOutputLine($"<color=red>[é”™è¯¯] {message}</color>");
 
         if (logToUnityConsole)
         {
@@ -419,36 +484,46 @@ public class ConsoleSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// æ˜¾ç¤ºæ‰€æœ‰å¯ç”¨å‘½ä»¤åˆ—è¡¨
+    /// </summary>
     private void ShowAllCommands()
     {
-        Log("=== ¿ÉÓÃÃüÁî ===");
+        Log("=== å¯ç”¨å‘½ä»¤ ===");
         foreach (var cmd in commandDictionary.Values.OrderBy(c => c.command))
         {
             Log($"<color=#00FF00>{cmd.command}</color> - {cmd.description}");
             if (!string.IsNullOrEmpty(cmd.usage))
             {
-                Log($"    ÓÃ·¨: {cmd.usage}");
+                Log($"    ç”¨æ³•: {cmd.usage}");
             }
         }
     }
 
+    /// <summary>
+    /// æ˜¾ç¤ºæŒ‡å®šå‘½ä»¤çš„å¸®åŠ©ä¿¡æ¯
+    /// </summary>
+    /// <param name="commandName">è¦æ˜¾ç¤ºå¸®åŠ©çš„å‘½ä»¤åç§°</param>
     private void ShowCommandHelp(string commandName)
     {
         if (commandDictionary.TryGetValue(commandName.ToLower(), out ConsoleCommand command))
         {
             Log($"=== {command.command} ===");
-            Log($"ÃèÊö: {command.description}");
+            Log($"æè¿°: {command.description}");
             if (!string.IsNullOrEmpty(command.usage))
             {
-                Log($"ÓÃ·¨: {command.usage}");
+                Log($"ç”¨æ³•: {command.usage}");
             }
         }
         else
         {
-            LogError($"ÃüÁî '{commandName}' ²»´æÔÚ");
+            LogError($"å‘½ä»¤ '{commandName}' ä¸å­˜åœ¨");
         }
     }
 
+    /// <summary>
+    /// åˆ‡æ¢æ§åˆ¶å°æ˜¾ç¤º/éšè—çŠ¶æ€
+    /// </summary>
     public void ToggleConsole()
     {
         if (consoleUI == null) return;
@@ -463,18 +538,24 @@ public class ConsoleSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// æ˜¾ç¤ºæ§åˆ¶å°ç•Œé¢
+    /// </summary>
     public void ShowConsole()
     {
         consoleUI?.Show();
         consoleUI?.FocusInputField();
     }
 
+    /// <summary>
+    /// éšè—æ§åˆ¶å°ç•Œé¢
+    /// </summary>
     public void HideConsole()
     {
         consoleUI?.Hide();
     }
 
-    // ±à¼­Æ÷µ÷ÊÔÓÃ
+    // ç¼–è¾‘å™¨èœå•é¡¹
 #if UNITY_EDITOR
     [UnityEditor.MenuItem("Tools/Console/Show Console")]
     public static void ShowConsoleMenuItem()
@@ -489,6 +570,10 @@ public class ConsoleSystem : MonoBehaviour
     }
 #endif
 }
+
+/// <summary>
+/// æ§åˆ¶å°å‘½ä»¤æ•°æ®ç»“æ„ï¼ŒåŒ…å«å‘½ä»¤åç§°ã€æè¿°ã€ç”¨æ³•å’Œæ‰§è¡ŒåŠ¨ä½œ
+/// </summary>
 [System.Serializable]
 public class ConsoleCommand
 {
@@ -499,7 +584,7 @@ public class ConsoleCommand
 }
 
 /// <summary>
-/// ÃüÁîÌØĞÔ£¬ÓÃÓÚ±ê¼Ç¾²Ì¬·½·¨Îª¿ØÖÆÌ¨ÃüÁî
+/// æ§åˆ¶å°å‘½ä»¤ç‰¹æ€§ï¼Œç”¨äºæ ‡è®°å¯ä»¥ä½œä¸ºæ§åˆ¶å°å‘½ä»¤è°ƒç”¨çš„é™æ€æ–¹æ³•
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public class ConsoleCommandAttribute : System.Attribute

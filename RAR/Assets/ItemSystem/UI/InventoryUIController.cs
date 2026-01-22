@@ -3,39 +3,51 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class InventoryUIController : MonoBehaviour
 {
-    public DynamicInventoryDisplay inventoryPanel;
+    public DynamicInventoryDisplay chestPanel;
+    public DynamicInventoryDisplay playerBackpackPanel;
+
     void Awake()
     {
-        inventoryPanel.gameObject.SetActive(false);
+        chestPanel.gameObject.SetActive(false);
+        playerBackpackPanel.gameObject.SetActive(false);
     }
     private void OnEnable()//启用时订阅事件
     {
-        InventoryHolder.OnDynamicInventoryDisplayRequested += DisplayInventory;
+        InventoryHolder.OnDynamicInventoryDisplayRequested += DisplayChestInventory;
+        PlayerBackpackHolder.OnPlayerBackpackDisplayRequested += DisplayPlayerBackpack;
     }
     private void OnDisable()//禁用时取消订阅事件
     {
-        InventoryHolder.OnDynamicInventoryDisplayRequested -= DisplayInventory;
+        InventoryHolder.OnDynamicInventoryDisplayRequested -= DisplayChestInventory;
+        PlayerBackpackHolder.OnPlayerBackpackDisplayRequested -= DisplayPlayerBackpack;
     }
     void Update()
     {
-        if (Keyboard.current.bKey.wasPressedThisFrame)
+        if(chestPanel.gameObject.activeInHierarchy && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            if (!CharacterManager.Instance.attributeManager.ContainsAttribute(AttributeType.BackPackCapacity))
-            {
-                Debug.LogError("未包含BackPackCapacity属性，可能是属性尚未初始化");
-                return;
-            }
-            DisplayInventory(new InventorySystem((int) Math.Floor(CharacterManager.Instance.attributeManager.GetFinalAttributeValue(AttributeType.BackPackCapacity))));
+            chestPanel.gameObject.SetActive(false);
         }
-         if(inventoryPanel.gameObject.activeInHierarchy && Keyboard.current.escapeKey.wasPressedThisFrame)
+        if(playerBackpackPanel.gameObject.activeInHierarchy && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            inventoryPanel.gameObject.SetActive(false);
+            playerBackpackPanel.gameObject.SetActive(false);
         }
     }
-    private void DisplayInventory(InventorySystem inventoryToDisplay)
+    private void DisplayChestInventory(InventorySystem inventoryToDisplay)
     {
-        inventoryPanel.gameObject.SetActive(true);
-        inventoryPanel.RefreshDynamicInventoryDisplay(inventoryToDisplay);
+        chestPanel.gameObject.SetActive(true);
+        chestPanel.RefreshDynamicInventoryDisplay(inventoryToDisplay);
+    }
+    private void DisplayChestAndPlayerBackpack(InventorySystem chestInventory,InventorySystem playerBackpackInventory)
+    {
+        chestPanel.gameObject.SetActive(true);
+        chestPanel.RefreshDynamicInventoryDisplay(chestInventory);
+        playerBackpackPanel.gameObject.SetActive(true);
+        playerBackpackPanel.RefreshDynamicInventoryDisplay(playerBackpackInventory);
+    }
+    private void DisplayPlayerBackpack(InventorySystem inventoryToDisplay)
+    {
+        playerBackpackPanel.gameObject.SetActive(true);
+        playerBackpackPanel.RefreshDynamicInventoryDisplay(inventoryToDisplay);
     }
 
 }
