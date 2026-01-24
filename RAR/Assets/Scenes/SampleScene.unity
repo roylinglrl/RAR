@@ -247,6 +247,9 @@ GameObject:
   - component: {fileID: 139013115}
   - component: {fileID: 139013114}
   - component: {fileID: 139013120}
+  - component: {fileID: 139013122}
+  - component: {fileID: 139013121}
+  - component: {fileID: 139013123}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -443,6 +446,54 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
+--- !u!114 &139013121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139013113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcd1f518b0f955c489ddd2c4cf73fdb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuffManager
+--- !u!114 &139013122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139013113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc29a477bcac9a347950697451649a3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatEntity
+  entityType: 0
+  maxHealth: 0
+  currentHealth: 0
+  attributeManager:
+    BaseAttributes:
+      keys: 
+      values: []
+    Modifiers: []
+    _isDirty: 1
+  buffManager: {fileID: 139013121}
+--- !u!114 &139013123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 139013113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e784aa64951b28547887f5a895ce8494, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  playerCombatEntity: {fileID: 139013122}
+  buffManager: {fileID: 139013121}
 --- !u!1 &243813030
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,12 +568,6 @@ MonoBehaviour:
     CurrentLevel: 0
     CurrentExperience: 0
     isHurt: 0
-  attributeManager:
-    BaseAttributes:
-      keys: 
-      values: []
-    Modifiers: []
-    _isDirty: 1
 --- !u!1001 &293926204
 PrefabInstance:
   m_ObjectHideFlags: 0

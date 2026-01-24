@@ -34,7 +34,7 @@ public class DebugInput : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.M))
         {
-            CharacterManager.Instance.attributeManager.addModifier(new AttributeModifier(AttributeType.BackPackCapacity,5,ModifierType.Additive,"test_source","test"));
+             PlayerManager.Instance.PlayerCombatEntity.attributeManager.addModifier(new AttributeModifier(AttributeType.BackPackCapacity,5,ModifierType.Additive,"test_source","test"));
         }
     }
 }

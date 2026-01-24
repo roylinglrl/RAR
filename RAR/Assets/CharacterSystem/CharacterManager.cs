@@ -8,13 +8,11 @@ public class CharacterManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        attributeManager = new AttributeManager();
     }
 
     public CharacterData currentCharacterData;//当前角色数据 从CharacterData中获取
     public List<CharacterData> UnlockedCharacters = new List<CharacterData>();//已解锁角色列表
-    public AttributeManager attributeManager;//属性管理器引用
-
+    //public AttributeManager attributeManager;//属性管理器引用
     public void AddNewCharacter(String characterID)//添加新角色到已解锁列表
 
     {
@@ -76,7 +74,7 @@ public class CharacterManager : MonoBehaviour
         {
             Debug.LogError("Character not found in unlocked list: " + characterID);
         }
-        attributeManager.initializeDefaultAttributes();
+        PlayerManager.Instance.PlayerCombatEntity.attributeManager.initializeDefaultAttributes();
     }
     public void AddExperience(float experience)//为当前角色添加经验值
     {
@@ -86,8 +84,7 @@ public class CharacterManager : MonoBehaviour
             return;
         }
         currentCharacterData.CurrentExperience += experience;
-        attributeManager.MarkDirty();
+        PlayerManager.Instance.PlayerCombatEntity.attributeManager.MarkDirty();
     }
-    
 
 }

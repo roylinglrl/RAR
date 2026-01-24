@@ -19,6 +19,9 @@ public class PlayerBackpackHolder : InventoryHolder
         if(Keyboard.current.bKey.wasPressedThisFrame) 
         {
             Debug.Log("打开背包");
+            float backPackCapacity = PlayerManager.Instance.PlayerCombatEntity.attributeManager.GetFinalAttributeValue(AttributeType.BackPackCapacity);
+            int backpackSize = (int)backPackCapacity;
+            _backpackSize = backpackSize;
             OnPlayerBackpackDisplayRequested?.Invoke(_backpackInventorySystem);
         }
     }
