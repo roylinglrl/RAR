@@ -13,6 +13,8 @@ public class InventorySystem
     public int InventorySize => inventorySlots.Count;
 
     public UnityAction<InventorySlot> OnInventorySlotChanged;
+    public UnityAction OnInventoryChanged;
+    public UnityAction OnPlayerBackpackSizeChanged;
 
     public InventorySystem(int size)
     {
@@ -20,6 +22,45 @@ public class InventorySystem
         for (int i = 0; i < size; i++)
         {
             inventorySlots.Add(new InventorySlot());
+        }
+    }
+    public void ResizeInventory(int newSize)
+    {
+        if(newSize <= 0)
+        {
+            Debug.LogError("Inventory size must be greater than 0");
+            return;
+        }
+        int currentSize = inventorySlots.Count;
+        if(newSize > currentSize)
+        {
+            for (int i = currentSize; i < newSize; i++)
+            {
+                inventorySlots.Add(new InventorySlot());
+            }
+        }
+        else if(newSize < currentSize)
+        {
+            List<InventorySlot> nonEmptySlots = inventorySlots.Where(slot => slot.ItemInstance != null).ToList();
+            if(nonEmptySlots.Count <= newSize)
+            {
+                inventorySlots = nonEmptySlots;
+                for(int i = inventorySlots.Count; i < newSize; i++)
+                {
+                    inventorySlots.Add(new InventorySlot());
+                }
+            }
+            else
+            {
+                Debug.LogError("Inventory size must be greater than or equal to the number of non-empty slots");
+                return;
+            }
+        }
+        OnInventoryChanged?.Invoke();
+        OnPlayerBackpackSizeChanged?.Invoke();
+        foreach(InventorySlot slot in inventorySlots)
+        {
+            OnInventorySlotChanged?.Invoke(slot);
         }
     }
     public bool AddToInventory(ItemData itemData, int amount)
