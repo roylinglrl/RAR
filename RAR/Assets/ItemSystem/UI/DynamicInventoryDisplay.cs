@@ -24,9 +24,14 @@ public class DynamicInventoryDisplay : InventoryDisplay
         if(inventorySystem != null) 
         {
             inventorySystem.OnInventorySlotChanged += UpdateSlot;
+            inventorySystem.OnInventorySizeChanged += HandleInventorySizeChanged;
         }
         AssignSlot(inventoryToDisplay);
 
+    }
+        private void HandleInventorySizeChanged()
+    {
+        AssignSlot(inventorySystem);
     }
     public override void AssignSlot(InventorySystem inventoryToDisplay)
     {
@@ -52,11 +57,12 @@ public class DynamicInventoryDisplay : InventoryDisplay
             slotForUI.Clear();
         }
     }
-    private void ODisable()
+    private void OnDisable()
     {
         if(inventorySystem != null) 
         {
             inventorySystem.OnInventorySlotChanged -= UpdateSlot;
+            inventorySystem.OnInventorySizeChanged -= HandleInventorySizeChanged;
         }
     }
 }

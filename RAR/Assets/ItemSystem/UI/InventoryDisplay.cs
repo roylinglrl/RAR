@@ -36,12 +36,12 @@ public abstract class InventoryDisplay : MonoBehaviour
         {
             if(isShiftPressed && clickedUISlot.AssignedInventorySlot.SplitStack(out InventorySlot splitSlot))
             {
-                currentItemData.UpdateItemSlot(splitSlot);//更新当前显示的物品数据
+                currentItemData.UpdateItemSlot(splitSlot, clickedUISlot);//更新当前显示的物品数据
                 clickedUISlot.UpdateSlotUI();//更新点击的物品槽
                 return;
             }else//如果没有按下Shift键
             {
-                currentItemData.UpdateItemSlot(clickedUISlot.AssignedInventorySlot);//更新当前显示的物品数据   
+                currentItemData.UpdateItemSlot(clickedUISlot.AssignedInventorySlot, clickedUISlot);//更新当前显示的物品数据   
                 clickedUISlot.ClearSlot();//清空点击的物品槽
                 return;
             }
@@ -77,7 +77,7 @@ public abstract class InventoryDisplay : MonoBehaviour
                     clickedUISlot.UpdateSlotUI();//更新点击的物品槽
                     var newItem = new InventorySlot(currentItemData.AssignedInventorySlot.ItemInstance, remain);//创建新物品
                     currentItemData.CloseSlot();//清空当前物品槽
-                    currentItemData.UpdateItemSlot(newItem);//更新当前显示的物品数据
+                    currentItemData.UpdateItemSlot(newItem, clickedUISlot);//更新当前显示的物品数据
                     
                 }
             }
@@ -92,7 +92,7 @@ public abstract class InventoryDisplay : MonoBehaviour
     {
         var clone = new InventorySlot(currentItemData.AssignedInventorySlot.ItemInstance, currentItemData.AssignedInventorySlot.ItemCount);
         currentItemData.CloseSlot();
-        currentItemData.UpdateItemSlot(clickedUISlot.AssignedInventorySlot);//更新当前显示的物品数据
+        currentItemData.UpdateItemSlot(clickedUISlot.AssignedInventorySlot, clickedUISlot);//更新当前显示的物品数据
         clickedUISlot.AssignedInventorySlot.AssignItem(clone);//更新点击的物品槽
         clickedUISlot.UpdateSlotUI();//更新点击的物品槽
     }

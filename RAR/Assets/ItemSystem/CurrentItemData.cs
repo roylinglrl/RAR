@@ -11,15 +11,21 @@ public class CurrentItemData : MonoBehaviour
     public TextMeshProUGUI ItemCount;
 
     public InventorySlot AssignedInventorySlot;
+    public InventorySlot originalInventorySlot;
+    public InventorySlotForUI originalInventorySlotForUI;
+
+    public InventoryDisplay parentDisplay;
 
     private void Awake()
     {
         ItemSprite.color = Color.clear;
         ItemCount.text = "";
     }
-    public void UpdateItemSlot(InventorySlot newInventorySlot)
+    public void UpdateItemSlot(InventorySlot newInventorySlot, InventorySlotForUI newInventorySlotForUI)
     {
         AssignedInventorySlot.AssignItem(newInventorySlot);//更新当前物品槽的物品数据
+        originalInventorySlot = newInventorySlot;
+        originalInventorySlotForUI = newInventorySlotForUI;
         ItemSprite.sprite = newInventorySlot.ItemInstance.ItemData.ItemIcon;//更新当前显示的物品图标
         ItemCount.text = newInventorySlot.ItemCount.ToString();//更新当前显示的物品数量
         ItemSprite.color = Color.white;//显示物品图标
@@ -31,6 +37,8 @@ public class CurrentItemData : MonoBehaviour
             transform.position = Mouse.current.position.ReadValue();//更新当前物品数据的位置
             if(Mouse.current.leftButton.wasPressedThisFrame && !IsPointerOverUI())
             {
+                originalInventorySlot.AssignItem(AssignedInventorySlot);//将当前物品槽的物品数据赋值给原始物品槽
+                originalInventorySlotForUI.UpdateSlotUI();//更新原始物品槽的UI
                 CloseSlot();
             }
         }

@@ -16,11 +16,17 @@ public class PlayerBackpackHolder : InventoryHolder
     }
     void Update()
     {
-        if(Keyboard.current.bKey.wasPressedThisFrame) 
+        if(Keyboard.current.bKey.wasPressedThisFrame && GameManager.Instance.IsGameStart) 
         {
             Debug.Log("打开背包");
+            if(PlayerManager.Instance == null) return;
+            if(PlayerManager.Instance.PlayerCombatEntity == null) return;
+            if(PlayerManager.Instance.PlayerCombatEntity.attributeManager == null) return;
+            if(!PlayerManager.Instance.PlayerCombatEntity.attributeManager.ContainsAttribute(AttributeType.BackPackCapacity)) return;
             float backPackCapacity = PlayerManager.Instance.PlayerCombatEntity.attributeManager.GetFinalAttributeValue(AttributeType.BackPackCapacity);
+            Debug.Log("背包容量:" + backPackCapacity);
             int backpackSize = (int)backPackCapacity;
+            _backpackInventorySystem.Resize(backpackSize);
             _backpackSize = backpackSize;
             OnPlayerBackpackDisplayRequested?.Invoke(_backpackInventorySystem);
         }

@@ -2,15 +2,33 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static GameManager Instance;
+    [SerializeField]private GameObject playerPrefab;
+
+    [SerializeField]private bool isGameStart;
+
+    public bool IsGameStart
     {
-        
+        get { return isGameStart; }
+        set { isGameStart = value; }
+    }
+    
+    private void Awake()
+    {
+        Instance = this;
+    }
+    public void GameStartWithSave(int saveIndex)
+    {
+        //读取存档 位置
+        //获取存档ID是否存在存档 如果不存在则无法开始
+        //读取存档数据
+        //加载基地场景
+        //生成玩家
+        //加载玩家的数据
     }
 
-    // Update is called once per frame
-    void Update()
+    public void putPlayerPrefab(Vector3 position)
     {
-        
+        Instantiate(playerPrefab, position, Quaternion.identity);
     }
 }

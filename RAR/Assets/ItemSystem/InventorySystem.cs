@@ -13,6 +13,7 @@ public class InventorySystem
     public int InventorySize => inventorySlots.Count;
 
     public UnityAction<InventorySlot> OnInventorySlotChanged;
+     public UnityAction OnInventorySizeChanged;
 
     public InventorySystem(int size)
     {
@@ -21,6 +22,33 @@ public class InventorySystem
         {
             inventorySlots.Add(new InventorySlot());
         }
+    }
+    public void Resize(int newSize)
+    {
+        if(newSize == inventorySlots.Count)return;
+        if(newSize > inventorySlots.Count)
+        {
+            for(int i = inventorySlots.Count; i < newSize; i++)
+            {
+                inventorySlots.Add(new InventorySlot());
+            }
+            
+        }
+        else if(newSize < inventorySlots.Count)
+        {
+            int slotsToRemove = inventorySlots.Count - newSize;
+           for (int i = 0; i < slotsToRemove; i++)
+            {
+                int lastIndex = inventorySlots.Count - 1;
+                if (inventorySlots[lastIndex].ItemInstance != null)
+                {
+                    //TODO 处理物品移除
+                    inventorySlots[lastIndex].ClearSlot();
+                }
+                inventorySlots.RemoveAt(lastIndex);
+            }
+        }
+        OnInventorySizeChanged?.Invoke();
     }
     public bool AddToInventory(ItemData itemData, int amount)
     {
