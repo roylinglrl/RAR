@@ -15,11 +15,13 @@ public class InventoryUIController : MonoBehaviour
     {
         InventoryHolder.OnDynamicInventoryDisplayRequested += DisplayChestInventory;
         PlayerBackpackHolder.OnPlayerBackpackDisplayRequested += DisplayPlayerBackpack;
+        PlayerBackpackHolder.OnPlayerBackpackSizeChanged += RefreshPlayerBackpackUI;
     }
     private void OnDisable()//禁用时取消订阅事件
     {
         InventoryHolder.OnDynamicInventoryDisplayRequested -= DisplayChestInventory;
         PlayerBackpackHolder.OnPlayerBackpackDisplayRequested -= DisplayPlayerBackpack;
+         PlayerBackpackHolder.OnPlayerBackpackSizeChanged -= RefreshPlayerBackpackUI;
     }
     void Update()
     {
@@ -48,6 +50,14 @@ public class InventoryUIController : MonoBehaviour
     {
         playerBackpackPanel.gameObject.SetActive(true);
         playerBackpackPanel.RefreshDynamicInventoryDisplay(inventoryToDisplay);
+    }
+        private void RefreshPlayerBackpackUI()
+    {
+        // 检查背包面板是否激活，如果激活则刷新显示
+        if (playerBackpackPanel.gameObject.activeInHierarchy && playerBackpackPanel.InventorySystem != null)
+        {
+            playerBackpackPanel.RefreshDynamicInventoryDisplay(playerBackpackPanel.InventorySystem);
+        }
     }
 
 }
