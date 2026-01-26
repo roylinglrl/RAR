@@ -132,6 +132,11 @@ public class AttributeManager //属性管理器
     }
     public void addModifier(AttributeModifier modifier)//添加属性修改器
     {
+        if(Modifiers.Any(modifier => modifier.Id == modifier.Id))
+        {
+            Debug.LogError($"修改器ID {modifier.Id} 已存在");
+            return;
+        }
         Modifiers.Add(modifier);
         _isDirty = true;
         MarkDirty();

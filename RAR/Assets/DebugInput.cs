@@ -1,13 +1,13 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
-
+[Icon("Assets/Gizmos/Debug.png")]
 public class DebugInput : MonoBehaviour
 {
     public ItemData itemData;
     public ItemData itemData2;
     public CharacterSO characterSO;
-    public PlayerBackpackHolder playerBackpackHolder;
+    //public PlayerBackpackHolder playerBackpackHolder;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,16 +17,6 @@ public class DebugInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.J))
-        {
-            ItemInstance itemInstance = new StaticItemInstance(itemData);
-            playerBackpackHolder.AddToInventory(itemInstance,1);
-        }
-        if(Input.GetKeyDown(KeyCode.K))
-        {
-            ItemInstance itemInstance = new DurableItemInstance(itemData2,500);
-            playerBackpackHolder.AddToInventory(itemInstance,1);
-        }
         if (Input.GetKeyDown(KeyCode.L))
         {
             CharacterManager.Instance.AddNewCharacter(characterSO);
