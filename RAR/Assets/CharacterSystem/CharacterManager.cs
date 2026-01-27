@@ -8,10 +8,13 @@ public class CharacterManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        EquipmentManager = new EquipmentManager();
     }
 
     public CharacterData currentCharacterData;//当前角色数据 从CharacterData中获取
     public List<CharacterData> UnlockedCharacters = new List<CharacterData>();//已解锁角色列表
+    [SerializeField] private EquipmentManager equipmentManager;
+    public EquipmentManager EquipmentManager { get { return equipmentManager; } private set { equipmentManager = value; } }
     //public AttributeManager attributeManager;//属性管理器引用
     public void AddNewCharacter(String characterID)//添加新角色到已解锁列表
 
@@ -69,12 +72,14 @@ public class CharacterManager : MonoBehaviour
         if (characterData != null)
         {
             currentCharacterData = characterData;
+            EquipmentManager.SetCurrentCharacter(characterID);
         }
         else
         {
             Debug.LogError("Character not found in unlocked list: " + characterID);
         }
         PlayerManager.Instance.PlayerCombatEntity.attributeManager.initializeDefaultAttributes();
+        UpdateAttributesFromEquipment();
     }
     public void AddExperience(float experience)//为当前角色添加经验值
     {
@@ -85,6 +90,38 @@ public class CharacterManager : MonoBehaviour
         }
         currentCharacterData.CurrentExperience += experience;
         PlayerManager.Instance.PlayerCombatEntity.attributeManager.MarkDirty();
+    }
+    public void UpdateAttributesFromEquipment()
+    {
+        if (PlayerManager.Instance?.PlayerCombatEntity?.attributeManager == null)
+            return;
+        
+        // 1. 清除所有装备来源的属性修饰符
+        PlayerManager.Instance.PlayerCombatEntity.attributeManager.removeModifierBySource("Equipment");
+        
+        // 2. 获取当前所有装备的属性修饰符
+        if (equipmentManager == null) return;
+        
+        var allModifiers = equipmentManager.GetAllEquipmentModifiers(currentCharacterData?.CharacterID);
+        
+        // 3. 为每个修饰符生成唯一ID并添加到属性管理器
+        foreach (var modifier in allModifiers)
+        {
+            // 生成唯一ID：装备类型 + 属性类型 + 值
+            string equipmentId = $"Equipment_{modifier.AttributeType}_{modifier.ModifierValue}_{Guid.NewGuid().ToString().Substring(0, 8)}";
+            
+            var attributeModifier = new AttributeModifier(
+                attributeType: modifier.AttributeType,
+                modifierValue: modifier.ModifierValue,
+                modifierType: modifier.ModifierType,
+                source: "Equipment",
+                id: equipmentId
+            );
+            
+            PlayerManager.Instance.PlayerCombatEntity.attributeManager.addModifier(attributeModifier);
+        }
+        
+        Debug.Log($"更新装备属性: 添加了{allModifiers.Count}个修饰符");
     }
 
 }

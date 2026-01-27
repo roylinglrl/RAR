@@ -67,5 +67,8 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "RAR.slnx"
+    "dotnet.defaultSolution": "RAR.slnx",
+    "cSpell.words": [
+        "interactor"
+    ]
 }

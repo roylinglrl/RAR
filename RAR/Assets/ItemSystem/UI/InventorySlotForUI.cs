@@ -8,6 +8,9 @@ public class InventorySlotForUI : MonoBehaviour
     [SerializeField]private TextMeshProUGUI ItemCount;
     [SerializeField]private InventorySlot assignedInventorySlot;
 
+
+    public bool canClick = true;
+
     private Button button;
     public InventorySlot AssignedInventorySlot => assignedInventorySlot;
     public InventoryDisplay ParentInventoryDisplay { get; private set; }//父物品槽
@@ -52,6 +55,6 @@ public class InventorySlotForUI : MonoBehaviour
     public void OnUISlotClick()
     {
         //TODO: 点击物品槽时的操作
-        ParentInventoryDisplay?.SlotClicked(this);
+        if(canClick) ParentInventoryDisplay?.SlotClicked(this);
     }
 }

@@ -21,7 +21,13 @@ public class PlayerBackpackHolder : InventoryHolder
         CheckBackpackCapacityChange();
         if(Keyboard.current.bKey.wasPressedThisFrame && GameManager.Instance.IsGameStart) 
         {
-            Debug.Log("打开背包");
+            ReadyBackpack();
+            OnPlayerBackpackDisplayRequested?.Invoke(_backpackInventorySystem);
+        }
+    }
+    public void ReadyBackpack()
+    {
+                    Debug.Log("打开背包");
             if(PlayerManager.Instance == null) return;
             if(PlayerManager.Instance.PlayerCombatEntity == null) return;
             if(PlayerManager.Instance.PlayerCombatEntity.attributeManager == null) return;
@@ -40,8 +46,7 @@ public class PlayerBackpackHolder : InventoryHolder
                 _backpackSize = backpackSize;
             }
             _isBackpackOpen = true;
-            OnPlayerBackpackDisplayRequested?.Invoke(_backpackInventorySystem);
-        }
+            GameManager.Instance.IsOnUI = true;
     }
         private void CheckBackpackCapacityChange()
     {

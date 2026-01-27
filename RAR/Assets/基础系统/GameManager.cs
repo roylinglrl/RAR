@@ -6,11 +6,17 @@ public class GameManager : MonoBehaviour
     [SerializeField]private GameObject playerPrefab;
 
     [SerializeField]private bool isGameStart;
+    [SerializeField]private bool isOnUI;
 
     public bool IsGameStart
     {
         get { return isGameStart; }
         set { isGameStart = value; }
+    }
+    public bool IsOnUI
+    {
+        get { return isOnUI; }
+        set { isOnUI = value; }
     }
     
     private void Awake()

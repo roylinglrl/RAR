@@ -6,6 +6,7 @@ using UnityEngine;
 public class DynamicInventoryDisplay : InventoryDisplay
 {
     [SerializeField]protected InventorySlotForUI SlotPrefab;
+    private InventoryHolder currentInventoryHolder;
     protected override void Start()
     {
         //InventoryHolder.OnDynamicInventoryDisplayRequested += RefreshDynamicInventoryDisplay;
@@ -17,10 +18,11 @@ public class DynamicInventoryDisplay : InventoryDisplay
         InventoryHolder.OnDynamicInventoryDisplayRequested -= RefreshDynamicInventoryDisplay;
     }
     //刷新动态物品显示
-    public void RefreshDynamicInventoryDisplay(InventorySystem inventoryToDisplay)
+    public void RefreshDynamicInventoryDisplay(InventorySystem inventoryToDisplay,InventoryHolder holder=null)
     {
         ClearSlots();
         inventorySystem = inventoryToDisplay;
+        currentInventoryHolder = holder;
         if(inventorySystem != null) 
         {
             inventorySystem.OnInventorySlotChanged += UpdateSlot;

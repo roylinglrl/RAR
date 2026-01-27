@@ -7,6 +7,9 @@ public class DebugInput : MonoBehaviour
     public ItemData itemData;
     public ItemData itemData2;
     public CharacterSO characterSO;
+    public PlayerBackpackHolder playerBackpackHolder;
+    public EquipmentData TestEquipmentData;
+    public EquipmentData TestWeaponData2;
     //public PlayerBackpackHolder playerBackpackHolder;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,6 +28,11 @@ public class DebugInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.M))
         {
              PlayerManager.Instance.PlayerCombatEntity.attributeManager.addModifier(new AttributeModifier(AttributeType.BackPackCapacity,-5,ModifierType.Additive,"test_source","test"));
+        }
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            playerBackpackHolder.AddToInventory(ItemFactory.CreateItemInstance(TestEquipmentData),1);
+            playerBackpackHolder.AddToInventory(ItemFactory.CreateItemInstance(TestWeaponData2),1);
         }
     }
 }

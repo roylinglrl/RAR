@@ -169,11 +169,11 @@ public enum ModifierType
 [Serializable]
 public class AttributeModifier
 {
-    public AttributeType AttributeType { get; private set; }//属性类型
-    public float ModifierValue { get; private set; }//修改器值
-    public ModifierType ModifierType { get; set; }//修改器类型
-    public string Source { get; set; }//修改器来源
-    public string Id { get; set; }//修改器ID
+    [SerializeField] public AttributeType AttributeType;//属性类型
+    [SerializeField] public float ModifierValue;//修改器值
+    [SerializeField] public ModifierType ModifierType;//修改器类型
+    [SerializeField] public string Source;//修改器来源
+    [SerializeField] public string Id;//修改器ID
     public AttributeModifier(AttributeType attributeType, float modifierValue,ModifierType modifierType,string source,string id)//属性修改器构造函数
     {
         AttributeType = attributeType;

@@ -48,8 +48,7 @@ GameObject:
   - component: {fileID: 4804798500925368351}
   - component: {fileID: 7778133896495807168}
   - component: {fileID: 4504929676824908531}
-  - component: {fileID: 2706175439255057138}
-  - component: {fileID: 5187488241085873940}
+  - component: {fileID: 4468371934477027588}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -280,7 +279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd1f518b0f955c489ddd2c4cf73fdb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuffManager
---- !u!114 &2706175439255057138
+--- !u!114 &4468371934477027588
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -289,27 +288,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7948049311049651934}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e784aa64951b28547887f5a895ce8494, type: 3}
+  m_Script: {fileID: 11500000, guid: 28801f6acf76d094ab49c9dc888f31b3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
-  playerCombatEntity: {fileID: 7778133896495807168}
-  buffManager: {fileID: 4504929676824908531}
---- !u!114 &5187488241085873940
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7948049311049651934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d7a8c1715fe1324ba9330bbd11147b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterManager
-  currentCharacterData:
-    CharacterID: 
-    CharacterName: 
-    CurrentLevel: 0
-    CurrentExperience: 0
-    isHurt: 0
-  UnlockedCharacters: []
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryHolder
+  InventorySize: 4
+  primaryInventorySystem:
+    inventorySlots: []
+  references:
+    version: 2
+    RefIds: []

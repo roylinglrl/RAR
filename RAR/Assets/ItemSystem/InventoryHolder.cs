@@ -8,7 +8,7 @@
         [SerializeField] private int InventorySize;
         [SerializeField] protected InventorySystem primaryInventorySystem;
         public InventorySystem PrimaryInventorySystem => primaryInventorySystem; // 修改属性名为PascalCase
-        public static UnityAction<InventorySystem> OnDynamicInventoryDisplayRequested;
+        public static UnityAction<InventorySystem,InventoryHolder> OnDynamicInventoryDisplayRequested;
         
         protected virtual void Awake()
         {

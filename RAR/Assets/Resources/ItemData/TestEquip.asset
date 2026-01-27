@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76d9813c51a3df24da483829dd9c6db4, type: 3}
+  m_Name: TestEquip
+  m_EditorClassIdentifier: Assembly-CSharp::EquipmentData
+  ItemName: TestEquip
+  ItemID: TestEquip
+  ItemDesc: TestEquip
+  MaxStack: 1
+  ItemIcon: {fileID: 7763714682512589182, guid: aa9244332399f40408553721708dcd67, type: 3}
+  EquipmentType: 0
+  RequiredLevel: 1
+  Durability: 100
+  ArmorValue: 25
+  EnergyCapacity: 0
+  ProcessingSpeed: 0
+  ExtraSlots: 0
+  AttributeModifiersList:
+  - AttributeType: 1
+    ModifierValue: 100
+    ModifierType: 0
+    Source: test_armor
+    Id: test_armor
